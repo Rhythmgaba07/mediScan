@@ -96,7 +96,7 @@ async def analyze_report(
         response = get_data(prompt, image)
 
         try:
-            result = json.loads(response)
+            structured_result = json.loads(response)
         except json.JSONDecodeError:
             # fallback if AI fails to return proper JSON
             structured_result = {
@@ -105,7 +105,7 @@ async def analyze_report(
                 "recommendations": "Not available"
             }
 
-        return JSONResponse(content={"result": result})
+        return JSONResponse(content={"result": structured_result})
 
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
