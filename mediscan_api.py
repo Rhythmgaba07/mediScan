@@ -84,13 +84,15 @@ async def analyze_report(
         prompt = (
             f"Analyze the following medical report image of type '{report_type}'. "
             "Provide detailed diagnosis and suggested next steps for the patient."
-            "Provide your response strictly in JSON format like this:\n"
-            "{\n"
-            '  "diagnosis": "...",\n'
-            '  "next_steps": "...",\n'
-            '  "recommendations": "..." \n'
-            "}\n"
-            "Do NOT include markdown symbols, bullets, or any extra text."
+            "Return your response strictly as JSON with these fields: "
+    '"diagnosis", "next_steps", "recommendations". '
+    "Do NOT include *, -, ----, or any line breaks inside values. "
+    "Example output:\n"
+    '{\n'
+    '  "diagnosis": "Patient has mild pneumonia.",\n'
+    '  "next_steps": "Start antibiotics and rest.",\n'
+    '  "recommendations": "Follow up in 5 days."\n'
+    '}'
         )
 
         response = get_data(prompt, image)
