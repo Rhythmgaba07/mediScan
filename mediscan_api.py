@@ -84,9 +84,20 @@ async def analyze_report(
         prompt = (
             f"Analyze the following medical report image of type '{report_type}'. "
             "Provide detailed diagnosis and suggested next steps for the patient."
+            "Do NOT include markdown symbols like *, -, or ----."
         )
 
         response = get_data(prompt, image)
+
+        lines = response.split("\n")
+        result = {}
+        for line in lines:
+            if line.lower().startswith("diagnosis:"):
+                result["diagnosis"] = line.split(":",1)[1].strip()
+            elif line.lower().startswith("next steps:"):
+                result["next_steps"] = line.split(":",1)[1].strip()
+            elif line.lower().startswith("recommendations:"):
+                result["recommendations"] = line.split(":",1)[1].strip()
 
         return JSONResponse(content={"result": response})
 
