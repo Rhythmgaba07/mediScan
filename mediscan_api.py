@@ -43,7 +43,7 @@ import os
 from dotenv import load_dotenv
 import google.generativeai as genai
 import uvicorn
-import json
+
 # Load environment variables
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -84,30 +84,11 @@ async def analyze_report(
         prompt = (
             f"Analyze the following medical report image of type '{report_type}'. "
             "Provide detailed diagnosis and suggested next steps for the patient."
-            "Return your response strictly as JSON with these fields: "
-    '"diagnosis", "next_steps", "recommendations". '
-    "Do NOT include *, -, ----, or any line breaks inside values. "
-    "Example output:\n"
-    '{\n'
-    '  "diagnosis": "Patient has mild pneumonia.",\n'
-    '  "next_steps": "Start antibiotics and rest.",\n'
-    '  "recommendations": "Follow up in 5 days."\n'
-    '}'
         )
 
         response = get_data(prompt, image)
 
-        try:
-            structured_result = json.loads(response)
-        except json.JSONDecodeError:
-            # fallback if AI fails to return proper JSON
-            structured_result = {
-                "diagnosis": response,
-                "next_steps": "Not available",
-                "recommendations": "Not available"
-            }
-
-        return JSONResponse(content={"result": structured_result})
+        return JSONResponse(content={"result": response})
 
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
