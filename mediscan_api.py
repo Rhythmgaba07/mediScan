@@ -58,7 +58,7 @@ app.add_middleware(
     allow_headers=["Content-Type", "Authorization"],
 )
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-1.5-flash-8b")
 
 def get_data(question: str, image: Image.Image):
     try:
